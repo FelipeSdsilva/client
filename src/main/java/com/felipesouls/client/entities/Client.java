@@ -1,14 +1,17 @@
 package com.felipesouls.client.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.felipesouls.client.dto.ClientDTO;
+import jakarta.persistence.*;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "tb_client")
-public class CLient {
+public class Client {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String cpf;
@@ -16,16 +19,20 @@ public class CLient {
     private LocalDate birthDate;
     private Integer children;
 
-    public CLient() {
+    public Client() {
     }
 
-    public CLient(Long id, String name, String cpf, Double income, LocalDate birthDate, Integer children) {
+    public Client(Long id, String name, String cpf, Double income, LocalDate birthDate, Integer children) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
         this.income = income;
         this.birthDate = birthDate;
         this.children = children;
+    }
+
+    public Client(ClientDTO clientDTO) {
+        BeanUtils.copyProperties(clientDTO, this);
     }
 
     public Long getId() {
@@ -79,7 +86,7 @@ public class CLient {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CLient cLient)) return false;
+        if (!(o instanceof Client cLient)) return false;
 
         return getId() != null ? getId().equals(cLient.getId()) : cLient.getId() == null;
     }
