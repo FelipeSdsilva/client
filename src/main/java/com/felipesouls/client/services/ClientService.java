@@ -3,6 +3,8 @@ package com.felipesouls.client.services;
 import com.felipesouls.client.dto.ClientDTO;
 import com.felipesouls.client.entities.Client;
 import com.felipesouls.client.repositories.ClientRepository;
+import com.felipesouls.client.services.exceptions.DatabaseExeception;
+import com.felipesouls.client.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,7 +26,8 @@ public class ClientService {
 
     @Transactional(readOnly = true)
     public ClientDTO findClientById(Long id) {
-        return new ClientDTO(clientRepository.findById(id).orElseThrow(() -> new RuntimeException()));
+        Client client = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id not found " + id));
+        return new ClientDTO(client);
     }
 
     @Transactional
@@ -42,7 +45,7 @@ public class ClientService {
             client = clientRepository.save(client);
             return new ClientDTO(client);
         } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException(e);
+            throw new ResourceNotFoundException("Id not found " + id);
         }
     }
 
@@ -50,9 +53,9 @@ public class ClientService {
         try {
             clientRepository.deleteById(id);
         } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException(e);
+            throw new ResourceNotFoundException("Id not found " + id);
         } catch (DataIntegrityViolationException se) {
-            throw new DataIntegrityViolationException("");
+            throw new DatabaseExeception("Integrity violation");
         }
     }
 
