@@ -2,6 +2,7 @@ package com.felipesouls.client.controllers;
 
 import com.felipesouls.client.dto.ClientDTO;
 import com.felipesouls.client.services.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +30,13 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientDTO> postNewClient(@RequestBody ClientDTO clientDTO) {
+    public ResponseEntity<ClientDTO> postNewClient(@Valid @RequestBody ClientDTO clientDTO) {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(clientDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(clientService.insertNewClient(clientDTO));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ClientDTO> putUpdateClient(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
+    public ResponseEntity<ClientDTO> putUpdateClient(@PathVariable Long id, @Valid @RequestBody ClientDTO clientDTO) {
         return ResponseEntity.ok().body(clientService.updateClientPerId(id, clientDTO));
     }
 
