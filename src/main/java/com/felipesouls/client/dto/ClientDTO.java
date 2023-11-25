@@ -1,6 +1,8 @@
 package com.felipesouls.client.dto;
 
 import com.felipesouls.client.entities.Client;
+import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDate;
@@ -8,10 +10,24 @@ import java.time.LocalDate;
 public class ClientDTO {
 
     private Long id;
+
+    @NotNull(message = "This value not be null")
+    @NotBlank(message = "This value not be empty")
     private String name;
+
+    @NotNull(message = "This value not be null")
+    @NotBlank(message = "This value not be empty")
+    @CPF()
+    @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$",message = "The default value for cpf is XXX.XXX.XXX-XX")
     private String cpf;
+
+    @Positive(message = "This has positive value")
     private Double income;
+
+    @PastOrPresent(message = "Incorrect date, you need insert old date or present")
     private LocalDate birthDate;
+
+    @Positive(message = "This value not has be negative.")
     private Integer children;
 
     public ClientDTO() {
